@@ -64,7 +64,7 @@ class ETLProcess:
         try:
             self.state = self.states.get_state('modified')
             if self.state is None:
-                self.states.set_state('modified', '2021-04-10')
+                self.states.set_state('modified', '1000-04-10')
                 self.state = self.states.get_state('modified')
             data = self.postgres_loader.load_data(self.state)
             self.logger.info('Success')

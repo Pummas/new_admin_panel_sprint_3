@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class PostgresLoader:
     """
     Класс, реализующий запросы к PostgreSQL
     """
+
     def __init__(self, pg_conn: psycopg2.extensions.connection):
         self._connection = pg_conn
         self._cursor = self._connection.cursor()

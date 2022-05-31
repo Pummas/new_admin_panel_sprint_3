@@ -31,6 +31,20 @@ class JsonFileStorage(BaseStorage):
                 return {}
 
 
+class RedisStorage(BaseStorage):
+    def __init__(self, redis_adapter):
+        self.redis = redis_adapter
+
+    def save_state(self, state: dict) -> None:
+        self.redis.set('data', json.dumps(state))
+
+    def retrieve_state(self):
+        data = self.redis.get('data')
+        if data is None:
+            return {}
+        return json.loads(data)
+
+
 class State:
     """
     Класс для хранения состояния при работе с данными,
@@ -39,6 +53,7 @@ class State:
 
     def __init__(self, storage: BaseStorage):
         self.storage = storage
+        self.storage.retrieve_state()
 
     def set_state(self, key: str, value: Any) -> None:
         """Установить состояние для определённого ключа"""

@@ -1,11 +1,10 @@
 import os
 from logging import getLogger
-
 import psycopg2.extras
 from dotenv import load_dotenv
-
+from redis import Redis
 from etl import ETLProcess
-from state import State, JsonFileStorage
+from state import State, RedisStorage
 
 load_dotenv()
 
@@ -29,7 +28,7 @@ if __name__ == '__main__':
         'host': os.environ.get('DB_HOST'),
         'port': os.environ.get('DB_PORT')
     }
-    file_storage = JsonFileStorage('station.txt')
+    file_storage = RedisStorage(Redis(host='localhost', port=6379, db=0))
     states = State(storage=file_storage)
     with psycopg2.connect(
             **dsl, cursor_factory=psycopg2.extras.RealDictCursor

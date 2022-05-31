@@ -1,0 +1,4 @@
+/01_etl/app/config/.env
+/01_etl/.env
+/.idea
+/01_etl/postgres_to_es/.env

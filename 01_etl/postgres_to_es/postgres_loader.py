@@ -3,7 +3,9 @@ import psycopg2
 
 
 class PostgresLoader:
-
+    """
+    Класс, реализующий запросы к PostgreSQL
+    """
     def __init__(self, pg_conn: psycopg2.extensions.connection):
         self._connection = pg_conn
         self._cursor = self._connection.cursor()
@@ -11,6 +13,8 @@ class PostgresLoader:
         self.batch_size = 100
 
     def load_data(self, state):
+        """Выдать ограниченное число фильмов, жанров и актеров
+        отсортированных по дате изменения фильмов"""
         try:
             self._cursor.execute(
                 f"""
@@ -59,11 +63,6 @@ fw.modified
 ORDER BY fw.modified
 LIMIT {self.batch_size}
 """)  # noqa: S608
-            # while True:
-            #     rows = self._cursor.fetchmany(size=self.batch_size)
             return self._cursor.fetchall()
-            # if not rows:
-            #     return
-            # yield from rows
         except Exception as e:
             raise e

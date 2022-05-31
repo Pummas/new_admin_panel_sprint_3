@@ -6,12 +6,17 @@ from postgres_loader import PostgresLoader
 
 
 class ETLProcess:
+    """
+    Класс для переноса данных из PostgreSQL в Elasticsearch
+    """
     def __init__(self, pg_conn: psycopg2.extensions.connection, state: State):
         self.states = state
         self.postgres_loader = PostgresLoader(pg_conn)
         self.state = self.states.get_state('modified')
 
     def extract(self):
+        """Взять состояние и учитывая состояние
+        получить данные из PostgreSQL"""
         self.state = self.states.get_state('modified')
         if self.state is None:
             self.states.set_state('modified', '2021-04-10')
@@ -20,14 +25,14 @@ class ETLProcess:
         return data
 
     def transform(self, data: dict):
+        """Преобразовать данные в нужный формат"""
         request = json.dumps(
             {"index": {"_index": "movies", "_id": data["id"]}}
         )
-        state = data.pop('modified')
-        transform_to_json = json.dumps(data)
-        return f"{request}\n {transform_to_json} \n", state
+        return f"{request}\n {json.dumps(data)} \n", data.pop('modified')
 
     def loader(self, data: list):
+        """Загрузить данные в Elasticsearch и обновить состояние"""
         transform_data = ''
         for elem in data:
             transform_elem, state = self.transform(elem)

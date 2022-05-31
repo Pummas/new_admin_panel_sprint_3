@@ -9,6 +9,7 @@ load_dotenv()
 
 
 def load_data(pg_conn, states):
+    """Основная функция переноса всех данных из PostgreSQL в Elasticsearch"""
     etl = ETLProcess(pg_conn, states)
     while True:
         data = etl.extract()

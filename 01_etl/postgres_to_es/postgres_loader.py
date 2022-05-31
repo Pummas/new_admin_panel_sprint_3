@@ -1,6 +1,10 @@
+import os
 from logging import getLogger
-import psycopg2
 
+import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class PostgresLoader:
     """
@@ -10,7 +14,6 @@ class PostgresLoader:
         self._connection = pg_conn
         self._cursor = self._connection.cursor()
         self._logger = getLogger()
-        self.batch_size = 100
 
     def load_data(self, state):
         """Выдать ограниченное число фильмов, жанров и актеров
@@ -61,7 +64,7 @@ fw.type,
 fw.created,
 fw.modified
 ORDER BY fw.modified
-LIMIT {self.batch_size}
+LIMIT {os.environ.get('BATCH_SIZE')}
 """)  # noqa: S608
             return self._cursor.fetchall()
         except Exception as e:

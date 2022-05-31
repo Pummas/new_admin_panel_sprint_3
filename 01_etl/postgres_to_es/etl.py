@@ -1,14 +1,17 @@
 import json
-import requests
+
 import psycopg2.extensions
-from state import State
+import requests
+
 from postgres_loader import PostgresLoader
+from state import State
 
 
 class ETLProcess:
     """
     Класс для переноса данных из PostgreSQL в Elasticsearch
     """
+
     def __init__(self, pg_conn: psycopg2.extensions.connection, state: State):
         self.states = state
         self.postgres_loader = PostgresLoader(pg_conn)

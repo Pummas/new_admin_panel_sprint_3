@@ -1,9 +1,11 @@
 import os
-import psycopg2.extras
 from logging import getLogger
+
+import psycopg2.extras
 from dotenv import load_dotenv
-from state import State, JsonFileStorage
+
 from etl import ETLProcess
+from state import State, JsonFileStorage
 
 load_dotenv()
 

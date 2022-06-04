@@ -77,12 +77,14 @@ GROUP BY fw.id
         try:
             self._cursor.execute(
                 f"""
-                SELECT id,
-                       to_char(modified, 'YYYY-MM-DD HH24:MI:SS.US') as modified
+                SELECT
+                    id,
+                    to_char(modified, 'YYYY-MM-DD HH24:MI:SS.US')
+                    as modified
                 FROM content.film_work
                 WHERE modified > '{state}'
                 LIMIT {os.environ.get('BATCH_SIZE')};
-                """)
+                """)  # noqa: S608
             return self._cursor.fetchall()
         except Exception as e:
             raise e
@@ -91,13 +93,15 @@ GROUP BY fw.id
         try:
             self._cursor.execute(
                 f"""
-                SELECT film_work_id as id,
-                       to_char(person.modified, 'YYYY-MM-DD HH24:MI:SS.US') as modified
+                SELECT
+                    film_work_id as id,
+                    to_char(person.modified, 'YYYY-MM-DD HH24:MI:SS.US')
+                    as modified
                 FROM content.person
                 JOIN content.person_film_work pfw on person.id = pfw.person_id
                 WHERE modified > '{state}'
                 LIMIT {os.environ.get('BATCH_SIZE')};
-                """)
+                """)  # noqa: S608
             return self._cursor.fetchall()
         except Exception as e:
             raise e
@@ -106,13 +110,15 @@ GROUP BY fw.id
         try:
             self._cursor.execute(
                 f"""
-                SELECT film_work_id as id,
-                       to_char(genre.modified, 'YYYY-MM-DD HH24:MI:SS.US') as modified
+                SELECT
+                    film_work_id as id,
+                    to_char(genre.modified, 'YYYY-MM-DD HH24:MI:SS.US')
+                    as modified
                 FROM content.genre
                 JOIN  content.genre_film_work gfw on genre.id = gfw.genre_id
                 WHERE modified > '{state}'
                 LIMIT {os.environ.get('BATCH_SIZE')};
-                """)
+                """)  # noqa: S608
             return self._cursor.fetchall()
         except Exception as e:
             raise e

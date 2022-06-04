@@ -50,8 +50,6 @@ class ETLProcess:
         self.postgres_loader = PostgresLoader(pg_conn)
         self.state = ''
 
-
-
     @backoff(logger=getLogger())
     def extract(self, table_name: str) -> tuple:
         """Взять состояние и учитывая состояние
@@ -81,7 +79,7 @@ class ETLProcess:
         return f"{request}\n {json.dumps(data)} \n"
 
     @backoff(logger=getLogger())
-    def loader(self, data: list, url: str,port: int, state: str):
+    def loader(self, data: list, url: str, port: int, state: str):
         """Загрузить данные в Elasticsearch и обновить состояние"""
         transform_data = ''
         for elem in data:

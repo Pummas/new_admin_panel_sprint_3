@@ -38,7 +38,7 @@ class RedisStorage(BaseStorage):
     def save_state(self, state: dict) -> None:
         self.redis.set('data', json.dumps(state))
 
-    def retrieve_state(self):
+    def retrieve_state(self) -> dict:
         data = self.redis.get('data')
         if data is None:
             return {}

@@ -46,6 +46,13 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+  etl:
+    container_name: elt-proccess
+    build:
+      context: ./postgres_to_es
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   static_volume:

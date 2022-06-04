@@ -2,3 +2,4 @@
 /01_etl/.env
 /.idea
 /01_etl/postgres_to_es/.env
+/01_etl/postgres_to_es/station.txt

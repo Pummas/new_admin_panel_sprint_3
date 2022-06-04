@@ -1,6 +1,6 @@
 import os
 import time
-from logging import getLogger
+import logging
 import psycopg2.extras
 from dotenv import load_dotenv
 from redis import Redis
@@ -21,7 +21,8 @@ def load_data(url: str, port: int, table_name: str) -> None:
 
 
 if __name__ == '__main__':
-    logger = getLogger()
+    logger = logging.getLogger()
+    logging.basicConfig(level=logging.INFO)
     dsl = {
         'dbname': os.environ.get('DB_NAME'),
         'user': os.environ.get('DB_USER'),
@@ -29,10 +30,14 @@ if __name__ == '__main__':
         'host': os.environ.get('DB_HOST'),
         'port': os.environ.get('DB_PORT')
     }
-    elastic_host = os.environ.get('ELASTIC_URL', 'http://localhost')
+    elastic_host = os.environ.get('ELASTIC_HOST', 'localhost')
+    elastic_url = f'http://{elastic_host}'
     elastic_port = os.environ.get('ELASTIC_PORT', 9200)
     time_sleep = int(os.environ.get('TIME_SLEEP', 100))
-    file_storage = RedisStorage(Redis(host='localhost', port=6379, db=0))
+    redis_host = os.environ.get('REDIS_HOST', 'localhost')
+    redis_port = os.environ.get('REDIS_PORT', '6379')
+    file_storage = RedisStorage(Redis(
+        host=redis_host, port=redis_port, db=0))
     table_names = ['film_work', 'person', 'genre']
     states = State(storage=file_storage)
     if states.get_state('modified') is None:
@@ -43,7 +48,7 @@ if __name__ == '__main__':
         ) as pg_conn:
             etl = ETLProcess(pg_conn, states)
             for name in table_names:
-                load_data(elastic_host, elastic_port, name)
+                load_data(elastic_url, elastic_port, name)
                 logger.info(f'successful genre {name} transfer')
         logger.info('successful transfer of all tables')
         pg_conn.close()
